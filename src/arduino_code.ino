@@ -67,9 +67,9 @@ void loop() {
     nh.spinOnce();
     delay(50);
 
-  /*
+  
   // error
-  int e = pos - target;
+  int e = encoder_pos.data - target;
 
   // derivative
   float dedt = (e-eprev)/(deltaT);
@@ -101,11 +101,11 @@ void loop() {
 
   Serial.print(target);
   Serial.print(" ");
-  Serial.print(pos);
+  Serial.print(encoder_pos.data);
   Serial.print(" ");
   Serial.print(pwr*dir);
   Serial.println();
-  */
+  
 }
 
 void setMotor(int dir, int ??, int pwm, int in1, int in2,int in3, int in4,int pwm1){
