@@ -1,0 +1,117 @@
+<?xml version="1.0" ?>
+<robot name="tyler_robot">
+
+  <material name="lite_grey">
+    <color rgba="0.8 0.8 0.8 1.0"/>
+  </material>
+
+  <material name="dark_grey">
+    <color rgba="0.4 0.4 0.4 1.0"/>
+  </material>
+
+  <material name="black">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+
+  <link name="base_link">
+    <!-- <inertial>
+      <mass value="100.0"/> 
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="100.05" ixy="0" ixz="0" iyy="100.05" iyz="0" izz="100.04"/>
+    </inertial> -->
+    <visual>
+      <geometry>
+        <box size="0.81 0.36 0.05"/>
+      </geometry>
+      <material name="lite_grey"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.5842 0.381 0.1016"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- FRONT WHEELS LINKS AND JOINTS -->
+  <link name="front_left_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.045" radius="0.055"/>
+      </geometry>
+      <material name="dark_grey"/>
+    </visual>
+  </link>
+
+  <link name="front_right_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.045" radius="0.055"/>
+      </geometry>
+      <material name="dark_grey"/>
+    </visual>
+  </link>
+
+  <joint name="front_left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="front_left_wheel_link"/>
+    <origin xyz="0.23 0.2 0" rpy="1.57 0.0 0.0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <joint name="front_right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="front_right_wheel_link"/>
+    <origin xyz="0.23 -0.2 0" rpy="1.57 0.0 0.0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+
+  <!-- REAR WHEELS LINKS AND JOINTS -->
+  <link name="rear_left_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.045" radius="0.055"/>
+      </geometry>
+      <material name="dark_grey"/>
+    </visual>
+  </link>
+
+  <link name="rear_right_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.045" radius="0.055"/>
+      </geometry>
+      <material name="dark_grey"/>
+    </visual>
+  </link>
+
+  <joint name="rear_left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="rear_left_wheel_link"/>
+    <origin xyz="-0.23 0.2 0" rpy="1.57 0.0 0.0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <joint name="rear_right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="rear_right_wheel_link"/>
+    <origin xyz="-0.23 -0.2 0" rpy="1.57 0.0 0.0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="laser_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.0762" radius="0.0254"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <joint name="hokuyo_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser_link"/>
+    <origin xyz="0.4 0.0 -0.01" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+</robot>
