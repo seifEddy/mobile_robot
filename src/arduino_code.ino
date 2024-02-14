@@ -20,7 +20,7 @@ float eintegral = 0;
 ros::NodeHandle nh;
 
 std_msgs::Int32 encoder_pos;
-ros::Publisher motor_pub("motor_encoder", &encoder_pos)
+ros::Publisher motor_pub("motor_encoder", &encoder_pos);
 
 void setup() {
   Serial.begin(9600);
@@ -108,7 +108,7 @@ void loop() {
   
 }
 
-void setMotor(int dir, int ??, int pwm, int in1, int in2,int in3, int in4,int pwm1){
+void setMotor(int dir, int pwmVal, int pwm, int in1, int in2,int in3, int in4,int pwm1){
   
   if(dir == 1){
     analogWrite(pwm,pwmVal);
