@@ -62,7 +62,7 @@ byte PWM3L_value;
 byte PWM4R_value;
 byte PWM4L_value;
 
-const int counts_in_rev = 140;
+const int max_velocity = 309;
 const float L = 0.435; // distance between the left and right wheels
 const int counts_per_rev = 140;
 const float wheel_radius = 0.055;
@@ -218,10 +218,10 @@ void loop() {
   Serial.println(" ]");
   */
   
-  encoder_pos1.data = encoderPos * 2 * PI * wheel_radius / counts_per_rev;
-  encoder_pos2.data = encoderPos1 * 2 * PI * wheel_radius / counts_per_rev;
-  encoder_pos3.data = encoderPos2 * 2 * PI * wheel_radius / counts_per_rev; 
-  encoder_pos4.data = encoderPos3 * 2 * PI * wheel_radius / counts_per_rev;
+  encoder_pos1.data = -encoderPos;
+  encoder_pos2.data = -encoderPos1;
+  encoder_pos3.data = -encoderPos2; 
+  encoder_pos4.data = -encoderPos3;
 
   motor1_pub.publish(&encoder_pos1);
   motor2_pub.publish(&encoder_pos2);
@@ -229,7 +229,7 @@ void loop() {
   motor4_pub.publish(&encoder_pos4);
   
   nh.spinOnce();
-  delay(25);
+  delay(250);
 }
 
 void encoder() {

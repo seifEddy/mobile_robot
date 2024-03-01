@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- <param name="robot_description" textfile="$(find tyler_pkg)/urdf/ranch_droid_robot.urdf" /> -->
+    
+    <arg name="model" default="$(find my_robot)/urdf/my_robot.urdf"/>
+
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    
+    <node name="serial_node" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM0"/>
+    <node name="get_velocity" pkg="my_robot" type="get_velocity.py" />
+    <!-- <node name="get_velocity" pkg="my_robot" type="get_velocity.py" /> -->
+    <include file="$(find ydlidar_ros_driver)/launch/lidar.launch"/>
+
+</launch>
