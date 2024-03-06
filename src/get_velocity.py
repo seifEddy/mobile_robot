@@ -4,6 +4,7 @@ import rospy
 from std_msgs.msg import Int32, Float32
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
+import tf
 from tf.transformations import quaternion_from_euler
 import math
 import time
@@ -37,6 +38,10 @@ class Controller:
         # Velocities
         self.v = 0.0
         self.w = 0.0
+        # To filter v and w
+        self.alpha = 0.1 
+        self.filtered_v = 0.0
+        self.filtered_w = 0.0
 
         self.v1 = 0.0
         self.v2 = 0.0
@@ -50,6 +55,7 @@ class Controller:
 
         # Publishing odometry information.
         self.odom_pub = rospy.Publisher('/odom', Odometry, queue_size=50)
+        self.odom_broadcaster = tf.TransformBroadcaster()
 
         # Current state of the robot.
         self.x = 0.0
@@ -110,8 +116,14 @@ class Controller:
             self.dt4 = rospy.Time.now().to_sec()
 
     def determine_velocity(self):
-        self.v = round(0.5 * (self.v1 + self.v4), 3)
-        self.w = round((self.v1 - self.v4) / self.L, 3)
+        raw_v = round(0.5 * (self.v1 + self.v4), 3)
+        raw_w = round((self.v1 - self.v4) / self.L, 3)
+        self.v = self.alpha * raw_v + (1 - self.alpha) * self.filtered_v
+        self.w = self.alpha * raw_w + (1 - self.alpha) * self.filtered_w
+
+        self.filtered_v = self.v
+        self.filtered_w = self.w
+        
         v = Float32()
         w = Float32()
         v.data = self.v
@@ -154,7 +166,14 @@ class Controller:
 
         # Create quaternion from theta.
         odom_quat = quaternion_from_euler(0, 0, self.theta)
-
+        
+        self.odom_broadcaster.sendTransform(
+        (self.x, self.y, 0.),
+        odom_quat,
+        self.current_time,
+        "base_link",
+        "odom"
+        )
         # Create and publish the odometry message.
         odom = Odometry()
         odom.header.stamp = self.current_time

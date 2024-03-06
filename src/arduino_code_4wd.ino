@@ -140,34 +140,34 @@ ros::Subscriber<geometry_msgs::Twist> twist_sub("cmd_vel", &twist_callback);
 void setup() {
   pinMode(ENC1A, INPUT_PULLUP);
   pinMode(ENC1B, INPUT_PULLUP);
-  pinMode(ENC2A, INPUT_PULLUP);
-  pinMode(ENC2B, INPUT_PULLUP);
-  pinMode(ENC3A, INPUT_PULLUP);
-  pinMode(ENC3B, INPUT_PULLUP);
+  // pinMode(ENC2A, INPUT_PULLUP);
+  // pinMode(ENC2B, INPUT_PULLUP);
+  // pinMode(ENC3A, INPUT_PULLUP);
+  // pinMode(ENC3B, INPUT_PULLUP);
   pinMode(ENC4A, INPUT_PULLUP);
   pinMode(ENC4B, INPUT_PULLUP);
   
   pinMode(R_en1, OUTPUT);
   pinMode(L_en1, OUTPUT);
-  pinMode(R_en2, OUTPUT);
-  pinMode(L_en2, OUTPUT);
-  pinMode(R_en3, OUTPUT);
-  pinMode(L_en3, OUTPUT);
+  // pinMode(R_en2, OUTPUT);
+  // pinMode(L_en2, OUTPUT);
+  // pinMode(R_en3, OUTPUT);
+  // pinMode(L_en3, OUTPUT);
   pinMode(R_en4, OUTPUT);
   pinMode(L_en4, OUTPUT);
   
   pinMode(PWM1R, OUTPUT);
   pinMode(PWM1L, OUTPUT);
-  pinMode(PWM2R, OUTPUT);
-  pinMode(PWM2L, OUTPUT);
-  pinMode(PWM3R, OUTPUT);
-  pinMode(PWM3L, OUTPUT);
+  // pinMode(PWM2R, OUTPUT);
+  // pinMode(PWM2L, OUTPUT);
+  // pinMode(PWM3R, OUTPUT);
+  // pinMode(PWM3L, OUTPUT);
   pinMode(PWM4R, OUTPUT);
   pinMode(PWM4L, OUTPUT);
 
  attachInterrupt(digitalPinToInterrupt(ENC1A), encoder, CHANGE);
- attachInterrupt(digitalPinToInterrupt(ENC2A), encoder1, CHANGE);
- attachInterrupt(digitalPinToInterrupt(ENC3A), encoder2, CHANGE);
+//  attachInterrupt(digitalPinToInterrupt(ENC2A), encoder1, CHANGE);
+//  attachInterrupt(digitalPinToInterrupt(ENC3A), encoder2, CHANGE);
  attachInterrupt(digitalPinToInterrupt(ENC4A), encoder3, CHANGE);
 
  // attachInterrupt(digitalPinToInterrupt(encoderPinB), encoder, CHANGE);
@@ -175,8 +175,8 @@ void setup() {
   Serial.begin(9600);
   nh.initNode();
   nh.advertise(motor1_pub);
-  nh.advertise(motor2_pub);
-  nh.advertise(motor3_pub);
+  // nh.advertise(motor2_pub);
+  // nh.advertise(motor3_pub);
   nh.advertise(motor4_pub);
 
   nh.subscribe(twist_sub);
@@ -186,19 +186,19 @@ void loop() {
   
   digitalWrite(R_en1, HIGH);
   digitalWrite(L_en1, HIGH);
-  digitalWrite(R_en2, HIGH);
-  digitalWrite(L_en2, HIGH);
-  digitalWrite(R_en3, HIGH);
-  digitalWrite(L_en3, HIGH);
+  // digitalWrite(R_en2, HIGH);
+  // digitalWrite(L_en2, HIGH);
+  // digitalWrite(R_en3, HIGH);
+  // digitalWrite(L_en3, HIGH);
   digitalWrite(R_en4, HIGH);
   digitalWrite(L_en4, HIGH);
 
   analogWrite(PWM1R, PWM1R_value); 
   analogWrite(PWM1L, PWM1L_value); 
-  analogWrite(PWM2R, PWM2R_value); 
-  analogWrite(PWM2L, PWM2L_value); 
-  analogWrite(PWM3R, PWM3R_value); 
-  analogWrite(PWM3L, PWM3L_value); 
+  // analogWrite(PWM2R, PWM2R_value); 
+  // analogWrite(PWM2L, PWM2L_value); 
+  // analogWrite(PWM3R, PWM3R_value); 
+  // analogWrite(PWM3L, PWM3L_value); 
   analogWrite(PWM4R, PWM4R_value); 
   analogWrite(PWM4L, PWM4L_value); 
 
@@ -219,17 +219,17 @@ void loop() {
   */
   
   encoder_pos1.data = -encoderPos;
-  encoder_pos2.data = -encoderPos1;
-  encoder_pos3.data = -encoderPos2; 
+  // encoder_pos2.data = -encoderPos1;
+  // encoder_pos3.data = -encoderPos2; 
   encoder_pos4.data = -encoderPos3;
 
   motor1_pub.publish(&encoder_pos1);
-  motor2_pub.publish(&encoder_pos2);
-  motor3_pub.publish(&encoder_pos3);
+  // motor2_pub.publish(&encoder_pos2);
+  // motor3_pub.publish(&encoder_pos3);
   motor4_pub.publish(&encoder_pos4);
   
   nh.spinOnce();
-  delay(250);
+  delay(25);
 }
 
 void encoder() {
