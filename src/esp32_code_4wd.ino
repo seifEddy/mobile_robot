@@ -53,9 +53,64 @@ byte PWM3L_value = 0;
 byte PWM4R_value = 0;
 byte PWM4L_value = 0;
 
-void twist_callback(const geometry_msgs::Twist& msg) {
-  // Process ROS twist messages here and set PWM values accordingly
-  // This function needs to be adapted based on your robot's kinematics and requirements
+const int max_velocity = 309;
+const float L = 0.444; // distance between the left and right wheels
+const int counts_per_rev = 140;
+const float wheel_radius = 0.055;
+
+void twist_callback(const geometry_msgs::Twist& msg)
+{
+   float vl;
+   float vr;
+
+   // Linear velocity is msg.linear.x
+   // Angular velocity is msg.angular.z
+   float v = msg.linear.x;
+   float w = msg.angular.z;
+
+   
+   vl = counts_per_rev * (v - 0.5 * w * L) / (2 * PI * wheel_radius);
+   vr = counts_per_rev * (v + 0.5 * w * L) / (2 * PI * wheel_radius);
+   if(abs(vr) > 255)
+   {
+      vr = (vr / abs(vr)) * 255;
+   }
+   
+   if (vr >= 0)
+   {
+      PWM1R_value = vr;
+      PWM1L_value = 0;
+      PWM2R_value = vr;
+      PWM2L_value = 0;
+   }
+   else
+   {
+      PWM1R_value = 0;
+      PWM1L_value = abs(vr);
+      PWM2R_value = 0;
+      PWM2L_value = abs(vr);
+   }
+
+   if(abs(vl) > 255)
+   {
+      vl = (vl / abs(vl)) * 255;
+   }
+
+   if (vl >= 0)
+   {
+      PWM4R_value = vl;
+      PWM4L_value = 0.0;
+      PWM3R_value = vl;
+      PWM3L_value = 0.0;
+   }
+   else
+   {
+      PWM4R_value = 0.0;
+      PWM4L_value = abs(vl);
+      PWM3R_value = 0.0;
+      PWM3L_value = abs(vl);
+   }
+ 
 }
 
 ros::Subscriber<geometry_msgs::Twist> twist_sub("cmd_vel", &twist_callback);
@@ -91,7 +146,7 @@ void setup() {
   nh.advertise(motor4_pub);
   nh.subscribe(twist_sub);
 
-  Serial.begin(115200); // Start serial communication at 115200 baud
+//   Serial.begin(115200); // Start serial communication at 115200 baud
 }
 
 void loop() {
