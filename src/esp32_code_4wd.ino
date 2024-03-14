@@ -1,26 +1,27 @@
+// #include "WiFi.h"
 #include <ESP32Encoder.h>
 #include <ros.h>
 #include <std_msgs/Int32.h>
 #include <geometry_msgs/Twist.h>
 
 // Pin definitions adapted for ESP32
-#define ENC1A 32
-#define ENC1B 33
-#define ENC2A 25
-#define ENC2B 26
-#define ENC3A 27
-#define ENC3B 14
-#define ENC4A 12
-#define ENC4B 13
+#define ENC1A 21
+#define ENC1B 19
+#define ENC2A 32
+#define ENC2B 33
+#define ENC3A 18
+#define ENC3B 5
+#define ENC4A 15
+#define ENC4B 4
 
-#define PWM1R 23
-#define PWM1L 22
-#define PWM2R 19
-#define PWM2L 18
-#define PWM3R 5
-#define PWM3L 17
-#define PWM4R 16
-#define PWM4L 4
+#define PWM1R 27
+#define PWM1L 14
+#define PWM2R 25
+#define PWM2L 26
+#define PWM3R 23
+#define PWM3L 22
+#define PWM4R 12
+#define PWM4L 13
 
 // Encoder objects
 ESP32Encoder encoder1;
@@ -37,7 +38,6 @@ std_msgs::Int32 encoder_pos2_msg;
 std_msgs::Int32 encoder_pos3_msg;
 std_msgs::Int32 encoder_pos4_msg;
 
-// ROS publishers
 ros::Publisher motor1_pub("motor1_encoder", &encoder_pos1_msg);
 ros::Publisher motor2_pub("motor2_encoder", &encoder_pos2_msg);
 ros::Publisher motor3_pub("motor3_encoder", &encoder_pos3_msg);
@@ -118,14 +118,14 @@ ros::Subscriber<geometry_msgs::Twist> twist_sub("cmd_vel", &twist_callback);
 void setup() {
   // Initialize encoder pins
   encoder1.attachFullQuad(ENC1A, ENC1B);
-  encoder2.attachFullQuad(ENC2A, ENC2B);
-  encoder3.attachFullQuad(ENC3A, ENC3B);
+  // encoder2.attachFullQuad(ENC2A, ENC2B);
+  // encoder3.attachFullQuad(ENC3A, ENC3B);
   encoder4.attachFullQuad(ENC4A, ENC4B);
 
   // Set all encoders' count to zero
   encoder1.setCount(0);
-  encoder2.setCount(0);
-  encoder3.setCount(0);
+  // encoder2.setCount(0);
+  // encoder3.setCount(0);
   encoder4.setCount(0);
 
   // Initialize PWM pins
@@ -140,32 +140,38 @@ void setup() {
 
   // Initialize ROS
   nh.initNode();
+  
   nh.advertise(motor1_pub);
-  nh.advertise(motor2_pub);
-  nh.advertise(motor3_pub);
+  // nh.advertise(motor2_pub);
+  // nh.advertise(motor3_pub);
   nh.advertise(motor4_pub);
   nh.subscribe(twist_sub);
 
-//   Serial.begin(115200); // Start serial communication at 115200 baud
+  // Serial.begin(57600); // Start serial communication at 115200 baud
 }
 
 void loop() {
   // Read encoder positions
-  encoder_pos1_msg.data = encoder1.getCount();
-  encoder_pos2_msg.data = encoder2.getCount();
-  encoder_pos3_msg.data = encoder3.getCount();
+  encoder_pos1_msg.data = -encoder1.getCount();
+  // encoder_pos2_msg.data = encoder2.getCount();
+  // encoder_pos3_msg.data = encoder3.getCount();
   encoder_pos4_msg.data = encoder4.getCount();
 
   // Publish encoder readings
   motor1_pub.publish(&encoder_pos1_msg);
-  motor2_pub.publish(&encoder_pos2_msg);
-  motor3_pub.publish(&encoder_pos3_msg);
+  // motor2_pub.publish(&encoder_pos2_msg);
+  // motor3_pub.publish(&encoder_pos3_msg);
   motor4_pub.publish(&encoder_pos4_msg);
 
-  // Set motor PWM values
-  // Example: analogWrite(PWM1R, PWM1R_value);
-  // Note: You might need to use ledcWrite on ESP32 for PWM control
+  analogWrite(PWM1R, PWM1R_value); 
+  analogWrite(PWM1L, PWM1L_value); 
+  analogWrite(PWM2R, PWM2R_value); 
+  analogWrite(PWM2L, PWM2L_value); 
+  analogWrite(PWM3R, PWM3R_value); 
+  analogWrite(PWM3L, PWM3L_value); 
+  analogWrite(PWM4R, PWM4R_value); 
+  analogWrite(PWM4L, PWM4L_value);
 
   nh.spinOnce(); // Handle ROS communication
-  delay(10); // Short delay to ensure stability
+  delay(100); // Short delay to ensure stability
 }
