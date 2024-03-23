@@ -63,7 +63,7 @@ byte PWM4R_value;
 byte PWM4L_value;
 
 const int max_velocity = 309;
-const float L = 0.435; // distance between the left and right wheels
+const float L = 0.444; // distance between the left and right wheels
 const int counts_per_rev = 140;
 const float wheel_radius = 0.055;
 
@@ -140,28 +140,28 @@ ros::Subscriber<geometry_msgs::Twist> twist_sub("cmd_vel", &twist_callback);
 void setup() {
   pinMode(ENC1A, INPUT_PULLUP);
   pinMode(ENC1B, INPUT_PULLUP);
-  // pinMode(ENC2A, INPUT_PULLUP);
-  // pinMode(ENC2B, INPUT_PULLUP);
-  // pinMode(ENC3A, INPUT_PULLUP);
-  // pinMode(ENC3B, INPUT_PULLUP);
+  pinMode(ENC2A, INPUT_PULLUP);
+  pinMode(ENC2B, INPUT_PULLUP);
+  pinMode(ENC3A, INPUT_PULLUP);
+  pinMode(ENC3B, INPUT_PULLUP);
   pinMode(ENC4A, INPUT_PULLUP);
   pinMode(ENC4B, INPUT_PULLUP);
   
   pinMode(R_en1, OUTPUT);
   pinMode(L_en1, OUTPUT);
-  // pinMode(R_en2, OUTPUT);
-  // pinMode(L_en2, OUTPUT);
-  // pinMode(R_en3, OUTPUT);
-  // pinMode(L_en3, OUTPUT);
+  pinMode(R_en2, OUTPUT);
+  pinMode(L_en2, OUTPUT);
+  pinMode(R_en3, OUTPUT);
+  pinMode(L_en3, OUTPUT);
   pinMode(R_en4, OUTPUT);
   pinMode(L_en4, OUTPUT);
   
   pinMode(PWM1R, OUTPUT);
   pinMode(PWM1L, OUTPUT);
-  // pinMode(PWM2R, OUTPUT);
-  // pinMode(PWM2L, OUTPUT);
-  // pinMode(PWM3R, OUTPUT);
-  // pinMode(PWM3L, OUTPUT);
+  pinMode(PWM2R, OUTPUT);
+  pinMode(PWM2L, OUTPUT);
+  pinMode(PWM3R, OUTPUT);
+  pinMode(PWM3L, OUTPUT);
   pinMode(PWM4R, OUTPUT);
   pinMode(PWM4L, OUTPUT);
 
@@ -180,25 +180,26 @@ void setup() {
   nh.advertise(motor4_pub);
 
   nh.subscribe(twist_sub);
+  digitalWrite(R_en1, HIGH);
+  digitalWrite(L_en1, HIGH);
+  digitalWrite(R_en2, HIGH);
+  digitalWrite(L_en2, HIGH);
+  digitalWrite(R_en3, HIGH);
+  digitalWrite(L_en3, HIGH);
+  digitalWrite(R_en4, HIGH);
+  digitalWrite(L_en4, HIGH);
 }
 
 void loop() {
   
-  digitalWrite(R_en1, HIGH);
-  digitalWrite(L_en1, HIGH);
-  // digitalWrite(R_en2, HIGH);
-  // digitalWrite(L_en2, HIGH);
-  // digitalWrite(R_en3, HIGH);
-  // digitalWrite(L_en3, HIGH);
-  digitalWrite(R_en4, HIGH);
-  digitalWrite(L_en4, HIGH);
+  
 
   analogWrite(PWM1R, PWM1R_value); 
   analogWrite(PWM1L, PWM1L_value); 
-  // analogWrite(PWM2R, PWM2R_value); 
-  // analogWrite(PWM2L, PWM2L_value); 
-  // analogWrite(PWM3R, PWM3R_value); 
-  // analogWrite(PWM3L, PWM3L_value); 
+  analogWrite(PWM2R, PWM2R_value); 
+  analogWrite(PWM2L, PWM2L_value); 
+  analogWrite(PWM3R, PWM3R_value); 
+  analogWrite(PWM3L, PWM3L_value); 
   analogWrite(PWM4R, PWM4R_value); 
   analogWrite(PWM4L, PWM4L_value); 
 
@@ -229,7 +230,7 @@ void loop() {
   motor4_pub.publish(&encoder_pos4);
   
   nh.spinOnce();
-  delay(25);
+  delay(250);
 }
 
 void encoder() {

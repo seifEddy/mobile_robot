@@ -5,14 +5,15 @@
     <arg name="model" default="$(find my_robot)/urdf/my_robot.urdf"/>
 
     <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+    <param name="use_sim_time" value="false" />
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
     
-    <node name="serial_node" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM0"/>
-    <node name="get_velocity" pkg="my_robot" type="get_velocity.py" />
+    <node name="serial_node" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyUSB0"/>
+    <node name="get_velocity" pkg="my_robot" type="get_velocity.py" output="screen"/>
+    <node name="range_node" pkg="my_robot" type="range_node.py" output="screen"/>
     <!-- <node name="get_velocity" pkg="my_robot" type="get_velocity.py" /> -->
     <include file="$(find ydlidar_ros_driver)/launch/X2.launch"/>
-    <node pkg="tf" type="static_transform_publisher" name="odom_to_base" args="0 0 0 0 0 0 odom base_link 100" />
 
 </launch>

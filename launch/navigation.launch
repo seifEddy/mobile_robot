@@ -1,0 +1,36 @@
+<launch>
+    <!-- Map Server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find my_robot)/maps/big_map.yaml" />
+
+    <!-- AMCL -->
+    <node name="amcl" pkg="amcl" type="amcl" output="screen">
+         <param name="odom_model_type" value="diff"/>
+        <param name="odom_frame_id" value="odom"/>
+        <param name="base_frame_id" value="base_link"/>
+        <param name="global_frame_id" value="map"/>
+        <param name="min_particles" value="100"/>
+        <param name="max_particles" value="2000"/>
+        <param name="initial_pose_x" value="0.0"/>
+        <param name="initial_pose_y" value="0.0"/>
+        <param name="initial_pose_a" value="0.0"/>
+        <param name="laser_max_range" value="10.0"/>
+        <param name="update_min_d" value="0.5"/>
+        <param name="update_min_a" value="1.0"/>
+        <param name="transform_tolerance" value="1.0"/>
+    </node>
+
+    <!-- Move Base -->
+    <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
+        <rosparam file="$(find my_robot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+	<rosparam file="$(find my_robot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+	<rosparam file="$(find my_robot)/config/global_costmap_params.yaml" command="load"/>
+	<rosparam file="$(find my_robot)/config/local_costmap_params.yaml" command="load"/>
+
+        <rosparam file="$(find my_robot)/config/move_base_params.yaml" command="load"/>
+        <rosparam file="$(find my_robot)/config/global_planner_params.yaml" command="load"/>
+        <rosparam file="$(find my_robot)/config/navfn_global_planner_params.yaml" command="load"/>
+        <rosparam file="$(find my_robot)/config/dwa_local_planner_params.yaml" command="load"/>
+        
+    </node>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find my_robot)/rviz/my_robot.rviz" required="true" />
+</launch>

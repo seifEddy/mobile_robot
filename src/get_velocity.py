@@ -21,7 +21,7 @@ class Controller:
         self.v_pub = rospy.Publisher('v', Float32, queue_size=1)
         self.w_pub = rospy.Publisher('w', Float32, queue_size=1)
         
-        self.L = 0.435
+        self.L = 0.44
         self.counts_per_rev = 140
         self.wheel_radius = 0.055
 
@@ -39,7 +39,7 @@ class Controller:
         self.v = 0.0
         self.w = 0.0
         # To filter v and w
-        self.alpha = 0.1 
+        self.alpha = 0.95
         self.filtered_v = 0.0
         self.filtered_w = 0.0
 
@@ -116,8 +116,8 @@ class Controller:
             self.dt4 = rospy.Time.now().to_sec()
 
     def determine_velocity(self):
-        raw_v = round(0.5 * (self.v1 + self.v4), 3)
-        raw_w = round((self.v1 - self.v4) / self.L, 3)
+        raw_v = 0.2 * round(0.5 * (self.v1 + self.v4), 3)
+        raw_w = 0.12 * round((self.v1 - self.v4) / self.L, 3)
         self.v = self.alpha * raw_v + (1 - self.alpha) * self.filtered_v
         self.w = self.alpha * raw_w + (1 - self.alpha) * self.filtered_w
 
@@ -135,7 +135,7 @@ class Controller:
     def run(self):
         while not rospy.is_shutdown():
             
-            if self.update > 3:
+            if self.update > 1:
                 self.update = 0
                 self.determine_velocity()
                 self.publish_odom()
@@ -145,7 +145,7 @@ class Controller:
         if self.dt is None:
             return
 
-        # print(self.dt)
+        #print(self.dt)
         self.current_time = rospy.Time.now()
         # dt = (self.current_time - self.last_time).to_sec()
 
